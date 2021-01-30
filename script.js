@@ -49,14 +49,14 @@ function timerDecrease(decrease = 1) {
         clearInterval(startTimer);
         document.querySelector('#starter').innerHTML = ''
         document.querySelector('#restart').innerHTML = `<button onclick="location = location['href']" id="restart-button" type="button" class="btn btn-primary">Restart Quiz!</button>`
-        document.querySelector('.timer').innerHTML = `<h3>You're out of time! Try again.<h3>`
-        document.querySelector('.scores').innerHTML = `<h1 class="text-center">Your score was:</h1> <h4 class="text-center">${highscore}/5</h4>`
-
+        document.querySelector('.timer').innerHTML = `<h3>You're out of time! Try again.<h3><br>Score: ${highscore}/5`
+        getName();
         if (countdown < 10) {
             timerBelowTen()
         }
     }
 }
+
 function timerBelowTen() {
     if (number === y.correct) {
         userAns()
@@ -65,7 +65,6 @@ function timerBelowTen() {
     }
     getName();
 }
-
 
 function restartQuiz() {
     onClick = "location = location['href']"
@@ -83,7 +82,6 @@ function startQuiz() {
 
 // randomize questions each time a new quiz starts
 function nextQuest() {
-
     mathRdm = Math.floor(Math.random() * questions.length)
     y = questions[mathRdm]
     rdm = mathRdm
@@ -110,7 +108,6 @@ function nextQuest() {
 }
 
 function userAns(number) {
-
     if (number === y.correct) {
         highscore++
 
@@ -140,7 +137,7 @@ function userAns(number) {
 
 function getName() {
     document.querySelector('#enterName').innerHTML =
-    `
+        `
         <div class="col-sm-10">
             <input type="text" readonly class="form-control-plaintext" id="scorePrompt"><h3>Enter your name to save your score!</h3></input>
          </div>
@@ -158,32 +155,35 @@ function getName() {
     </div>
     `
 }
-function clearPageScores(){
+
+function clearPageScores() {
     document.querySelector('#enterName').innerHTML = ''
 }
 
-function scorePage(){
-    document.querySelector('#restart').innerHTML = `<button onclick="location = location['href']" id="restart-button" type="button" class="btn btn-primary">Restart Quiz!</button>`
+function scorePage() {
     var nameSave = document.querySelector('#nameInput').value
     var scoringInfo = JSON.parse(window.localStorage.getItem("Name/Score")) || [];
     var olEl = document.createElement("ol");
     var storedInfo = {
-        nameSave: nameSave ,
+        nameSave: nameSave,
         highscore: highscore
-        }
+    }
 
-    scoringInfo.push(storedInfo)
-    localStorage.setItem('Name/Score', JSON.stringify(scoringInfo));
-    document.querySelector('.d-none').classList.remove('d-none')
-    document.querySelector('#savedScore').append(olEl)
-    scoringInfo.forEach(function(score) {
-    // create li tag for each high score
-    var liTag = document.createElement("li");
-        liTag.textContent = score.nameSave + " you scored " + score.highscore + '/5';
+    if (nameSave === '') {
+        scorePage();
+    } 
+
+        scoringInfo.push(storedInfo)
+        localStorage.setItem('Name/Score', JSON.stringify(scoringInfo));
+        document.querySelector('.d-none').classList.remove('d-none')
+        document.querySelector('#savedScore').append(olEl)
+        scoringInfo.forEach(function (score) {
+            // create li tag for each high score
+            var liTag = document.createElement("li");
+            liTag.textContent = score.nameSave + " you scored " + score.highscore + '/5';
 
             // display on page
 
-        olEl.appendChild(liTag);
+            olEl.appendChild(liTag);
         });
 }
-    
